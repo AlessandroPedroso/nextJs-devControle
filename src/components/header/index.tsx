@@ -10,7 +10,8 @@ export function Header() {
   // console.log(data);
 
   async function handleLogin() {
-    await signIn();
+    // await signIn("google");
+    await signIn("google");
   }
 
   async function handleLogout() {
