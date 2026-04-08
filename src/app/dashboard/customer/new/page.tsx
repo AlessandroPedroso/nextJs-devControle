@@ -4,7 +4,7 @@ import Link from "next/link";
 import { NewCustomerForm } from "../components/form";
 export default async function NewCostumer() {
   const session = await requireAdmin();
-  console.log(session.user.id);
+  // console.log(session.user.id);
   return (
     <Container>
       <main className="flex flex-col mt-9 mb-2">

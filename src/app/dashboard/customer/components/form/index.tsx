@@ -50,6 +50,7 @@ export function NewCustomerForm({ userId }: { userId: string }) {
       userId: userId,
     });
 
+    router.refresh(); //garante o refresh da pagina para mostrar o novo cliente cadastrado
     router.replace("/dashboard/customer");
   }
 
