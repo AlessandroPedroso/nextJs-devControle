@@ -32,11 +32,12 @@ model Customer {
 
 //Chamados
 model Ticket {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  status     String
-  create_at  DateTime? @default(now())
-  updated_at DateTime? @default(now())
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  status      String
+  create_at   DateTime? @default(now())
+  updated_at  DateTime? @default(now())
 
   customerId String?   @db.ObjectId
   customer   Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)

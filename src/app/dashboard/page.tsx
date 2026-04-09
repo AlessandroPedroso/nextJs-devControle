@@ -1,5 +1,7 @@
 import { TicketItem } from "@/app/dashboard/components/ticket";
 import { Container } from "@/components/container";
+import { requireAdmin } from "@/lib/auth";
+import prismaClient from "@/lib/prisma";
 import Link from "next/link";
 
 export default async function Dashboard() {
@@ -9,6 +11,17 @@ export default async function Dashboard() {
   //   redirect("/");
   // }
   // // console.log(session);
+  const session = await requireAdmin();
+
+  const tickets = await prismaClient.ticket.findMany({
+    where: {
+      userId: session.user?.id as string,
+      status: "ABERTO",
+    },
+    include: {
+      customer: true,
+    },
+  });
 
   return (
     <Container>
@@ -35,8 +48,13 @@ export default async function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            <TicketItem />
-            <TicketItem />
+            {tickets.map((tickets) => (
+              <TicketItem
+                customer={tickets.customer}
+                ticket={tickets}
+                key={tickets.id}
+              />
+            ))}
           </tbody>
         </table>
       </main>

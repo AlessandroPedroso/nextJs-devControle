@@ -2,6 +2,7 @@
 
 import { api } from "@/lib/api";
 import { CustomerProps } from "@/utils/customer.type";
+import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 
 export function CardCostumer({ customer }: { customer: CustomerProps }) {
@@ -19,7 +20,17 @@ export function CardCostumer({ customer }: { customer: CustomerProps }) {
       console.log(response.data);
       router.refresh(); //garante o refresh da pagina para mostrar a lista de clientes atualizada
     } catch (error) {
-      console.error("Failed to delete customer", error);
+      if (isAxiosError(error)) {
+        console.error(
+          error.response?.data?.message || "Failed to delete customer",
+        );
+        alert(
+          error.response?.data?.message ||
+            "falha no sistema ao deletar cliente",
+        );
+      }
+
+      console.error(error, "Failed to delete customer");
     }
   }
 
