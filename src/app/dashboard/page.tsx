@@ -21,6 +21,9 @@ export default async function Dashboard() {
     include: {
       customer: true,
     },
+    orderBy: {
+      create_at: "desc",
+    },
   });
 
   return (
@@ -57,6 +60,11 @@ export default async function Dashboard() {
             ))}
           </tbody>
         </table>
+        {tickets.length === 0 && (
+          <h1 className="px-1 text-gray-600">
+            Nenhum ticket aberto foi encontrado...
+          </h1>
+        )}
       </main>
     </Container>
   );

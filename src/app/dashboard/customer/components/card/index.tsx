@@ -17,7 +17,7 @@ export function CardCostumer({ customer }: { customer: CustomerProps }) {
         },
       });
 
-      console.log(response.data);
+      // console.log(response.data);
       router.refresh(); //garante o refresh da pagina para mostrar a lista de clientes atualizada
     } catch (error) {
       if (isAxiosError(error)) {

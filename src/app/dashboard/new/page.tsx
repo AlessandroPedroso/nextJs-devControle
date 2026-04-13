@@ -88,7 +88,7 @@ export default async function NewTicket() {
           )}
 
           {customers.length === 0 && (
-            <Link href="/dashboard/new">
+            <Link href="/dashboard/customer/new">
               Você ainda não tem nenhum cliente,{" "}
               <span className="text-blue-500 font-medium">
                 Cadastrar cliente
