@@ -1,251 +1,183 @@
-# Dev Controle - Contexto do Projeto
+# Dev Controle
 
-## 📋 Informações Gerais
+Sistema web para gestão de clientes e chamados, com autenticação Google, painel administrativo e abertura pública de tickets.
 
-**Nome do Projeto:** Dev Controle  
-**Descrição:** Sistema de gerenciamento de clientes e atendimentos
+## Status do Projeto
 
----
+Projeto finalizado e funcional.
 
-## 🚀 Stack Tecnológica
+## Funcionalidades
 
-### Dependências de Produção
+- Login com Google via NextAuth.
+- Dashboard protegido por sessão.
+- Cadastro, listagem e remoção de clientes.
+- Regras de integridade para não excluir cliente com ticket associado.
+- Abertura de chamado interna (painel) e externa (rota pública).
+- Listagem de chamados abertos com atualização de status para FECHADO.
+- Modal com detalhes completos do chamado e dados do cliente.
+- Validação de formulários com React Hook Form + Zod.
 
-| Biblioteca      | Versão | Descrição                                          |
-| --------------- | ------ | -------------------------------------------------- |
-| **Next.js**     | 16.1.6 | Framework React com renderização híbrida (SSR/SSG) |
-| **React**       | 19.2.3 | Biblioteca para construção de interfaces           |
-| **React DOM**   | 19.2.3 | Renderizador React para web                        |
-| **React Icons** | 5.5.0  | Biblioteca de ícones (FiUser, FiLogOut)            |
+## Stack
 
-### Dependências de Desenvolvimento
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- NextAuth
+- Prisma ORM
+- MongoDB
+- Axios
+- React Hook Form
+- Zod
+- React Icons
 
-| Biblioteca                      | Versão | Descrição                                |
-| ------------------------------- | ------ | ---------------------------------------- |
-| **TypeScript**                  | 5.x    | Superset JavaScript com tipagem estática |
-| **Tailwind CSS**                | 4.x    | Framework CSS utility-first              |
-| **@tailwindcss/postcss**        | 4.x    | Plugin PostCSS para Tailwind             |
-| **Babel Plugin React Compiler** | 1.0.0  | Compilador experimental do React         |
-| **@types/node**                 | 20.x   | Tipagens TypeScript para Node.js         |
-| **@types/react**                | 19.x   | Tipagens TypeScript para React           |
-| **@types/react-dom**            | 19.x   | Tipagens TypeScript para React DOM       |
+## Arquitetura
 
----
+- Frontend e backend no mesmo projeto Next.js (App Router + Route Handlers).
+- Banco de dados MongoDB com Prisma Client gerado em generated/prisma.
+- Sessão/autorização com NextAuth e Prisma Adapter.
+- API interna em src/app/api para operações de clientes e chamados.
 
-## 🏗️ Arquitetura
+## Estrutura Principal
 
-### Framework: Next.js 16 (App Router)
+~~~
+src/
+  app/
+    api/
+      auth/[...nextauth]/route.ts
+      customer/route.ts
+      ticket/route.ts
+    dashboard/
+      customer/
+      new/
+      page.tsx
+    open/
+      page.tsx
+  components/
+    header/
+    container/
+    input/
+    modal/
+  lib/
+    api.ts
+    auth.ts
+    prisma.ts
+prisma/
+  schema.prisma
+generated/
+  prisma/
+~~~
 
-O projeto utiliza a arquitetura moderna do **Next.js App Router** (introduzida no Next.js 13 e consolidada no 16), que oferece:
+## Pré-requisitos
 
-- ✅ **Server Components** por padrão
-- ✅ **File-based routing** no diretório `app/`
-- ✅ **Layouts aninhados** com compartilhamento de UI
-- ✅ **Loading states** e error boundaries integrados
-- ✅ **API Routes** co-localizadas
-- ✅ **Metadata API** para SEO otimizado
+- Node.js 20+
+- npm 10+
+- MongoDB ativo (Atlas ou local)
+- Projeto OAuth no Google Cloud
 
-### Recursos Ativados
+## Instalação e Execução
 
-- **React Compiler**: Ativado no `next.config.ts` para otimizações automáticas de performance
-- **Font Optimization**: Uso do Google Fonts (Inter) com otimização automática
-- **Image Optimization**: Suporte nativo do Next.js para imagens
-- **TypeScript Strict Mode**: Ativado para máxima segurança de tipos
+1. Instalar dependências:
 
----
+~~~bash
+npm install
+~~~
 
-## 📁 Estrutura de Pastas
+2. Criar o arquivo .env na raiz do projeto.
 
-```
-devcontrole/
-├── public/                      # Arquivos estáticos públicos
-│   ├── file.svg
-│   ├── globe.svg
-│   ├── next.svg
-│   ├── vercel.svg
-│   └── window.svg
-│
-├── src/                         # Código fonte da aplicação
-│   ├── app/                     # App Router (Next.js 16)
-│   │   ├── layout.tsx           # Layout raiz da aplicação
-│   │   ├── page.tsx             # Página inicial (/)
-│   │   ├── globals.css          # Estilos globais + Tailwind
-│   │   └── favicon.ico          # Ícone da aplicação
-│   │
-│   └── components/              # Componentes React reutilizáveis
-│       └── header/
-│           └── index.tsx        # Componente de cabeçalho
-│
-├── .gitignore                   # Arquivos ignorados pelo Git
-├── next.config.ts               # Configurações do Next.js
-├── next-env.d.ts                # Tipos TypeScript do Next.js
-├── package.json                 # Dependências e scripts
-├── package-lock.json            # Lock de dependências
-├── postcss.config.mjs           # Configuração do PostCSS
-├── tsconfig.json                # Configuração do TypeScript
-└── README.md                    # Documentação do projeto
-```
+3. Gerar o Prisma Client:
 
-### Convenções de Organização
+~~~bash
+npx prisma generate
+~~~
 
-#### `/src/app` - Rotas da Aplicação
+4. Sincronizar o schema com o banco:
 
-- **layout.tsx**: Layout compartilhado entre todas as páginas
-- **page.tsx**: Componente de página (rota)
-- **loading.tsx**: Estado de carregamento (opcional)
-- **error.tsx**: Tratamento de erros (opcional)
-- **not-found.tsx**: Página 404 (opcional)
+~~~bash
+npx prisma db push
+~~~
 
-#### `/src/components` - Componentes Reutilizáveis
+5. Rodar em desenvolvimento:
 
-- Estrutura de pastas por funcionalidade
-- Cada componente em sua própria pasta
-- Arquivo `index.tsx` como ponto de entrada
-
----
-
-## ⚙️ Configurações Importantes
-
-### TypeScript (`tsconfig.json`)
-
-```json
-{
-  "compilerOptions": {
-    "target": "ES2017", // Compatibilidade JavaScript
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "strict": true, // Modo estrito ativado
-    "jsx": "react-jsx", // JSX com novo runtime
-    "moduleResolution": "bundler", // Resolução moderna
-    "paths": {
-      "@/*": ["./src/*"] // Alias para imports absolutos
-    }
-  }
-}
-```
-
-**Recursos Principais:**
-
-- ✅ **Strict Mode**: Máxima segurança de tipos
-- ✅ **Path Aliases**: `@/` aponta para `./src/`
-- ✅ **Incremental Compilation**: Build mais rápido
-
-### Next.js (`next.config.ts`)
-
-```typescript
-{
-  reactCompiler: true; // React Compiler ativado
-}
-```
-
-**Otimizações:**
-
-- ✅ **React Compiler**: Memoização automática de componentes
-- ✅ **Automatic Static Optimization**: Páginas estáticas quando possível
-- ✅ **Code Splitting**: Carregamento sob demanda
-
-### Tailwind CSS
-
-Configurado via **@tailwindcss/postcss** v4 (versão moderna sem arquivo de config tradicional).
-
-**Recursos:**
-
-- ✅ Utility classes diretas no JSX
-- ✅ Purge automático de CSS não utilizado
-- ✅ JIT (Just-In-Time) mode por padrão
-
----
-
-## 📜 Scripts Disponíveis
-
-| Script    | Comando         | Descrição                                       |
-| --------- | --------------- | ----------------------------------------------- |
-| **dev**   | `npm run dev`   | Inicia servidor de desenvolvimento (porta 3000) |
-| **build** | `npm run build` | Gera build de produção otimizada                |
-| **start** | `npm run start` | Inicia servidor de produção                     |
-
-### Uso:
-
-```bash
-# Desenvolvimento
+~~~bash
 npm run dev
+~~~
 
-# Produção
-npm run build
-npm run start
-```
+Aplicação local: http://localhost:3000
+
+## Variáveis de Ambiente
+
+Use este modelo no .env:
+
+~~~env
+DATABASE_URL="mongodb+srv://USER:PASSWORD@CLUSTER/DB_NAME?retryWrites=true&w=majority"
+
+GOOGLE_CLIENT_ID="seu_google_client_id"
+GOOGLE_CLIENT_SECRET="seu_google_client_secret"
+
+# URL base usada pelo Axios no projeto
+HOST_URL="http://localhost:3000"
+
+# Recomendadas para NextAuth em produção
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="uma_chave_forte"
+~~~
+
+## Scripts
+
+- npm run dev: inicia ambiente de desenvolvimento.
+- npm run build: gera build de produção.
+- npm run start: sobe aplicação em modo produção.
+
+## Rotas da Aplicação
+
+### Rotas de Página
+
+- /: página inicial.
+- /dashboard: lista chamados abertos (rota protegida).
+- /dashboard/new: cria chamado interno (rota protegida).
+- /dashboard/customer: lista clientes (rota protegida).
+- /dashboard/customer/new: cadastra cliente (rota protegida).
+- /open: abertura pública de chamado por email do cliente.
+
+### Rotas de API
+
+- /api/auth/[...nextauth]: fluxo de autenticação NextAuth.
+- /api/customer
+  - GET: busca cliente por email.
+  - POST: cria cliente.
+  - DELETE: remove cliente quando não há tickets vinculados.
+- /api/ticket
+  - POST: cria chamado.
+  - PATCH: altera status do chamado para FECHADO.
+
+## Modelo de Dados (Prisma)
+
+- User: usuário autenticado.
+- Customer: cliente vinculado ao usuário.
+- Ticket: chamado vinculado ao cliente e ao usuário.
+- Account, Session, VerificationToken: modelos padrão do NextAuth.
+
+## Fluxo de Uso
+
+1. Fazer login com Google.
+2. Cadastrar clientes no painel.
+3. Abrir chamados para clientes no dashboard.
+4. Acompanhar chamados abertos na tela principal do dashboard.
+5. Fechar chamados e consultar detalhes via modal.
+6. Opcionalmente, abrir chamados públicos em /open usando o email do cliente.
+
+## Pontos Técnicos
+
+- Uso de Server Components e Server Actions no App Router.
+- Proteção de rotas com requireAdmin.
+- Prisma Client singleton para evitar múltiplas conexões em desenvolvimento.
+- Revalidação/refresh de UI após mutações para manter dados sincronizados.
+
+## Licença
+
+Uso educacional e de portfólio.
 
 ---
 
-## 🎨 Padrões de Desenvolvimento
-
-### Componentes
-
-- **Convenção**: React Server Components por padrão
-- **Tipagem**: TypeScript em todos os componentes
-- **Importações**: Uso de path alias `@/` para imports absolutos
-- **Estilização**: Tailwind CSS com utility classes
-
-### Exemplo de Estrutura de Componente:
-
-```tsx
-// src/components/exemplo/index.tsx
-import { FiIcon } from "react-icons/fi";
-
-export function Exemplo() {
-  return (
-    <div className="w-full p-4">
-      <FiIcon size={24} />
-      <h2 className="text-xl font-bold">Título</h2>
-    </div>
-  );
-}
-```
-
-### Roteamento
-
-- **Padrão**: File-based routing no diretório `app/`
-- **Exemplo**:
-  - `app/page.tsx` → rota `/`
-  - `app/dashboard/page.tsx` → rota `/dashboard`
-  - `app/clientes/[id]/page.tsx` → rota dinâmica `/clientes/:id`
-
-### Metadados e SEO
-
-```tsx
-// app/layout.tsx ou app/page.tsx
-export const metadata: Metadata = {
-  title: "Dev Controle - Seu sistema de gerencimaneto.",
-  description: "Gerencia seus clientes e atendimentos de forma fácil!",
-};
-```
-
----
-
-## 🌐 Funcionalidades Implementadas
-
-### Header Component
-
-- Logo interativo com link para home
-- Ícone de usuário com link para `/dashboard`
-- Botão de logout
-- Design responsivo com Tailwind CSS
-- Animação de hover no logo
-
-### Layout Global
-
-- Fonte Inter do Google Fonts (pesos: 400, 500, 700)
-- CSS global com Tailwind
-- Header persistente em todas as páginas
-- Metadata default configurado
-
-## 📚 Recursos e Documentação
-
-- **Next.js 16**: https://nextjs.org/docs
-- **React 19**: https://react.dev
-- **Tailwind CSS 4**: https://tailwindcss.com/docs
-- **TypeScript**: https://www.typescriptlang.org/docs
-- **React Icons**: https://react-icons.github.io/react-icons
-
----
-
-**Última atualização:** 22 de fevereiro de 2026
+Última atualização: 15 de abril de 2026.
