@@ -3,6 +3,7 @@ import { Container } from "@/components/container";
 import { requireAdmin } from "@/lib/auth";
 import prismaClient from "@/lib/prisma";
 import Link from "next/link";
+import { ButtonRefresh } from "./components/button";
 
 export default async function Dashboard() {
   // const session = await getServerSession(authOptions);
@@ -13,10 +14,26 @@ export default async function Dashboard() {
   // // console.log(session);
   const session = await requireAdmin();
 
+  // const tickets = await prismaClient.ticket.findMany({
+  //   where: {
+  //     userId: session.user?.id as string,
+  //     status: "ABERTO",
+  //   },
+  //   include: {
+  //     customer: true,
+  //   },
+  //   orderBy: {
+  //     create_at: "desc",
+  //   },
+  // });
+
+  //buscado pelo idCliente (customer) e não pelo id do usuário, pois o cliente é quem tem o relacionamento com o ticket, e o cliente tem o relacionamento com o usuário, então para buscar os tickets abertos do cliente, preciso buscar pelo id do cliente que tem o relacionamento com o usuário logado.
   const tickets = await prismaClient.ticket.findMany({
     where: {
-      userId: session.user?.id as string,
       status: "ABERTO",
+      customer: {
+        userId: session.user?.id as string,
+      },
     },
     include: {
       customer: true,
@@ -31,12 +48,16 @@ export default async function Dashboard() {
       <main className="mt-9 mb-2">
         <div className="flex items-center justify-between px-2">
           <h1 className="text-3xl font-bold">Chamados</h1>
-          <Link
-            href="/dashboard/new"
-            className="bg-blue-500 px-4 py-1 rounded text-white"
-          >
-            Abrir chamado
-          </Link>
+
+          <div className="flex items-center gap-2">
+            <ButtonRefresh />
+            <Link
+              href="/dashboard/new"
+              className="bg-blue-500 px-4 py-1 rounded text-white"
+            >
+              Abrir chamado
+            </Link>
+          </div>
         </div>
 
         <table className="min-w-full my-2">

@@ -3,6 +3,37 @@ import prismaClient from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const customerEmail = searchParams.get("email");
+
+  if (!customerEmail || customerEmail === "") {
+    return NextResponse.json({ error: "Email is required" }, { status: 400 });
+  }
+
+  try {
+    const customer = await prismaClient.customer.findFirst({
+      where: {
+        email: customerEmail as string,
+      },
+    });
+
+    if (!customer || customer === null) {
+      return NextResponse.json(
+        { message: "Nenhum cliente encontrado com esse email." },
+        { status: 400 },
+      );
+    }
+
+    return NextResponse.json(customer);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "customer nor found" },
+      { status: 400 },
+    );
+  }
+}
+
 export async function DELETE(request: Request) {
   const session = await getServerSession(authOptions);
 
